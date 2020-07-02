@@ -11,18 +11,30 @@ driver = webdriver.Chrome(executable_path=r"./chromedriver.exe")
 
 driver.get(URL)
 
-pheight = driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+pheight = driver.execute_script("return document.body.scrollHeight")
+html = driver.find_element_by_tag_name('html')
 
-while True:
+t0 = time.time()
+t1 = t0
 
-	time.sleep(2)
+timeout = 180
+scroll_sleep = 2
 
-	nheight = driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+while (t1 - t0 < timeout):
+	print(t1 - t0)
+	driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+	time.sleep(scroll_sleep)
+
+	nheight = driver.execute_script("return document.body.scrollHeight")
 
 	if pheight == nheight:
+		print("BREAKING")
 		break
 
 	pheight = nheight
+	t1 = time.time()
+
 
 bs4 = BeautifulSoup(driver.page_source, "html5lib")
 

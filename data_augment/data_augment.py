@@ -1,7 +1,8 @@
 from PIL import Image, ImageOps, ImageEnhance
 import glob
-import os
+import os, sys
 import random
+
 
 
 def mirror_img(img_name, img, ext):
@@ -55,19 +56,29 @@ def save_image(img_name, img, ext):
 
 if __name__  == "__main__":
 
-	image_list = glob.glob("./images/*")
+	directory = sys.argv[1] + '*'
 
+	if directory is None:
+		print("No directory entered")
+		exit()
+
+	image_list = glob.glob(directory)
+
+	print("Creating Mirrored Images for {}".format(directory))
 	# create mirrored images
 	for im in image_list:
+		print(im)
 		img_name, ext = os.path.splitext(im)
 		img = Image.open(img_name + ext)
 		mirror_img(img_name, img, ext)
 
 
-	image_list = glob.glob("./images/*")
+	image_list = glob.glob(directory)
 
+	print("Augmenting Images for {}".format(directory))
 	# apply random augmentation to all images
 	for i in image_list:
+		print(i)
 		img_name, ext = os.path.splitext(i)
 		img = Image.open(img_name + ext)
 
