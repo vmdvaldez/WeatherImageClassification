@@ -3,7 +3,7 @@ import glob
 import os, sys
 import random
 
-
+random.seed(13)
 
 def mirror_img(img_name, img, ext):
 	img_name = img_name + "mir"

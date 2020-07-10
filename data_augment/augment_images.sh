@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ROOT_IMG_DIR="/######/Desktop/APS360Project/Image/"
+ROOT_IMG_DIR="<PATH-TO-SPLIT-DATA>/weather_dataset/train/"
 
 classes=("cloudy" "foggy" "rain" "snow" "sunny")
 
