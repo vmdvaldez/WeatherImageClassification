@@ -116,7 +116,7 @@ if __name__ == "__main__":
 	m = metadata_map()
 	feat = m.get_features("3414285633")
 	avail_metadata = m.get_available_metadata()
-	print(len(avail_metadata))
+	print(len)
 	print(feat)
 
 # weather_feats = ['hum', 'tempm', 'dewptm', 'vism', 'pressurem', 'windchillm', 'wgustm']
