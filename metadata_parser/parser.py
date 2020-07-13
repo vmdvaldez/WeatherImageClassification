@@ -19,17 +19,10 @@ class metadata_map():
 
 
 	def get_features(self, img_id):
-		for i in self.n_metadata:
-			key, val = list(i[0].items())[0]
-			# print(key, type(key))
-			if key == str(img_id):
-				print(i[0][img_id])
-				return(img_id, i[0][img_id], i[1])
-			# if i[0][img_id]:
-				# return i[0][img_id]
+		return self.n_metadata[img_id]
+
 
 	def __init__(self):
-
 
 		def get_class(index,class_idxs):
 
@@ -53,8 +46,8 @@ class metadata_map():
 		class_idxs = []
 		img_ids = []
 		for clss in classes:
-			IMAGE_PATH="./Image/{}".format(clss)
-			imgs =  [splitext(im)[0] for im in listdir(IMAGE_PATH) if isfile(join(IMAGE_PATH, im))]
+			IMAGE_PATH="./Image/{}".format(clss) #path to image class
+			imgs =  [splitext(im)[0] for im in listdir(IMAGE_PATH) if isfile(join(IMAGE_PATH, im))] #get all images names
 			if class_idxs != []:
 				class_idxs.append(class_idxs[-1] + len(imgs))
 			else:
@@ -66,36 +59,35 @@ class metadata_map():
 
 		features = ["hum", "tempm", "dewptm", "vism", "pressurem", "windchillm", "wgustm"]
 
-		# # # Get Relevant Metadata
+		### Load Metadata
 		with open('metadata.json') as f:
 			metadata = json.load(f)
 
-		self.n_metadata = []
-
+		self.n_metadata = {}
 		for data in metadata:
-
-			try:
-				
-				idx = img_ids.index(data['id'])
-				clss = get_class(idx, class_idxs)
+			try:	
+				idx = img_ids.index(data['id']) # check whether image has a metadata if not skip
+				clss = get_class(idx, class_idxs) # check which class image belongs to
 				# print(idx, clss)
-				
-				# print("FOUND")
 				feat_list = []
-
 				for key, val in data['weather'].items():
 					if key in features:
-						feat_list.append({key : val})
+						feat_list.append({key : val}) #put all relevant features in list
 		# 				# print(key, val)
-				self.n_metadata.append( ({data['id'] : feat_list}, clss ))
-				# print(self.n_metadata[-1])
-				# print(idx)
+				# if(data['id'] == "12381129"):
+				# 	print(feat_list)
+				self.n_metadata[data['id']] = (feat_list, clss) # <id : weatherfeat[]> mapping
+				# print(self.n_metadata)
 			except Exception as e:
-				l = 0
-				# print("NOT FOUND")
+				# print("{} img id NOT FOUND".format(data['id'])) #lots of images not found because we are using subset of original dataset
+				x = 0
+				# print(x)
 		
 		print(len(img_ids)) # total of 8408 images 
 		print(len(self.n_metadata)) ## 6509 images with metadata
+		# for key,val in self.n_metadata.items():
+			# print(key, val)
+			# break
 		# the 8408 - 6509 = 1899 (which is the number of images we got online)
 		
 
