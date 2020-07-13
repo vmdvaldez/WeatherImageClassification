@@ -1,6 +1,9 @@
 import json
+import os
 from os import listdir
 from os.path import isfile, join, splitext
+import glob
+import random
 
 
 class metadata_map():
@@ -21,6 +24,8 @@ class metadata_map():
 	def get_features(self, img_id):
 		return self.n_metadata[img_id]
 
+	def get_available_metadata(self):
+		return self.n_metadata
 
 	def __init__(self):
 
@@ -46,15 +51,21 @@ class metadata_map():
 		class_idxs = []
 		img_ids = []
 		for clss in classes:
-			IMAGE_PATH="./Image/{}".format(clss) #path to image class
-			imgs =  [splitext(im)[0] for im in listdir(IMAGE_PATH) if isfile(join(IMAGE_PATH, im))] #get all images names
+			# IMAGE_PATH="./weather/{}".format(clss) #path to image class
+			IMAGE_PATH="./weather_dataset/train/{}".format(clss)
+			imgs =  [im.split('.')[0] for im in listdir(IMAGE_PATH) if isfile(join(IMAGE_PATH, im))] #get all images names
 			if class_idxs != []:
 				class_idxs.append(class_idxs[-1] + len(imgs))
 			else:
 				class_idxs.append(len(imgs))
 			img_ids += imgs
 
-		# print(img_ids)
+
+
+		print(len(img_ids) / 4 == len(set(img_ids)))
+		img_ids = list(set(img_ids))
+		# print(type(img_ids[0]))
+
 		# print(class_idxs)
 
 		features = ["hum", "tempm", "dewptm", "vism", "pressurem", "windchillm", "wgustm"]
@@ -65,7 +76,7 @@ class metadata_map():
 
 		self.n_metadata = {}
 		for data in metadata:
-			try:	
+			try:
 				idx = img_ids.index(data['id']) # check whether image has a metadata if not skip
 				clss = get_class(idx, class_idxs) # check which class image belongs to
 				# print(idx, clss)
@@ -74,20 +85,21 @@ class metadata_map():
 					if key in features:
 						feat_list.append({key : val}) #put all relevant features in list
 		# 				# print(key, val)
-				# if(data['id'] == "12381129"):
-				# 	print(feat_list)
+				if(data['id'] == "3414285633"):
+					print(feat_list)
 				self.n_metadata[data['id']] = (feat_list, clss) # <id : weatherfeat[]> mapping
 				# print(self.n_metadata)
 			except Exception as e:
+				x = 0		
 				# print("{} img id NOT FOUND".format(data['id'])) #lots of images not found because we are using subset of original dataset
-				x = 0
 				# print(x)
 		
-		print(len(img_ids)) # total of 8408 images 
-		print(len(self.n_metadata)) ## 6509 images with metadata
+		print(len(img_ids)) 
+		print(len(self.n_metadata))
 		# for key,val in self.n_metadata.items():
 			# print(key, val)
 			# break
+		
 		# the 8408 - 6509 = 1899 (which is the number of images we got online)
 		
 
@@ -102,7 +114,9 @@ class metadata_map():
 
 if __name__ == "__main__":
 	m = metadata_map()
-	feat = m.get_features("12381129")
+	feat = m.get_features("3414285633")
+	avail_metadata = m.get_available_metadata()
+	print(len(avail_metadata))
 	print(feat)
 
 # weather_feats = ['hum', 'tempm', 'dewptm', 'vism', 'pressurem', 'windchillm', 'wgustm']
