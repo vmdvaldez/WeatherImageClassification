@@ -6,13 +6,13 @@ import random
 random.seed(13)
 
 def mirror_img(img_name, img, ext):
-	img_name = img_name + "mir"
+	img_name = img_name + ".mir"
 	mirror = ImageOps.mirror(img)
 	mirror.save(img_name + ext)
 	return img_name
 
 def contrast_img(img_name, img, ext):
-	img_name = img_name + "cont"
+	img_name = img_name + ".cont"
 	n_img = ImageEnhance.Contrast(img)
 
 	x = round(random.uniform(0.8, 1.5),2)
@@ -25,7 +25,7 @@ def contrast_img(img_name, img, ext):
 
 
 def brighten_img(img_name, img, ext):
-	img_name = img_name + "brght"
+	img_name = img_name + ".brght"
 	n_img = ImageEnhance.Brightness(img)
 
 	x = round(random.uniform(0.8, 1.2),2)
@@ -38,7 +38,7 @@ def brighten_img(img_name, img, ext):
 
 
 def sharpen_img(img_name, img, ext):
-	img_name = img_name + "shrp"
+	img_name = img_name + ".shrp"
 	n_img = ImageEnhance.Sharpness(img)
 
 	x = round(random.uniform(0.1, 1.5),2)
