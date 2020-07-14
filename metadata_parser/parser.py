@@ -62,7 +62,7 @@ class metadata_map():
 
 
 
-		print(len(img_ids) / 4 == len(set(img_ids)))
+		print("imgs_ids * 4 is equal to set(img_ids): "len(img_ids) / 4 == len(set(img_ids)))
 		img_ids = list(set(img_ids))
 		# print(type(img_ids[0]))
 
@@ -116,7 +116,7 @@ if __name__ == "__main__":
 	m = metadata_map()
 	feat = m.get_features("3414285633")
 	avail_metadata = m.get_available_metadata()
-	print(len)
+	print(len(avail_metadata))
 	print(feat)
 
 # weather_feats = ['hum', 'tempm', 'dewptm', 'vism', 'pressurem', 'windchillm', 'wgustm']
