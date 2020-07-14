@@ -62,7 +62,7 @@ class metadata_map():
 
 
 
-		print(len(img_ids) / 4 == len(set(img_ids)))
+		print("imgs_ids * 4 is equal to set(img_ids): "len(img_ids) / 4 == len(set(img_ids)))
 		img_ids = list(set(img_ids))
 		# print(type(img_ids[0]))
 
