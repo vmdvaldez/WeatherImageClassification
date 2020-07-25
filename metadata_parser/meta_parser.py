@@ -46,7 +46,45 @@ class metadata_map():
 			assert 0
 		return self.datasets[x]
 
+
+
 	def __init__(self):
+
+		# features = ["hum", "tempm", "dewptm", "vism", "pressurem", "windchillm", "wgustm"]
+		features = ["hum", "tempm", "dewptm", "pressurem", "vism"]
+		# features = ["hum", "tempm", "dewptm", "pressurem"]
+
+		def normalize_data():
+			# feat_max = [-9999999.0] * len(features)
+			# feat_min = [99999999.0] * len(features)
+			feat_max = {i : -9999999.0 for i in features}
+			feat_min = {i : 99999999.0 for i in features}
+
+			for i in self.datasets:
+				for key, val in i.items():
+					# print(key, val[0]['hum'])
+					for fkey, fval in val[0].items():
+						# tmp = float(fval)
+						# if tmp == '' or tmp == 'N/A' or tmp <= -999.0:
+						# 	continue
+						feat_max[fkey] = max(feat_max[fkey], float(fval))
+						feat_min[fkey] = min(feat_min[fkey], float(fval))
+					# for index in range(len(features)):
+						# feat_max[index] = max(float(val[0][features[index]]), feat_max[index])
+						# feat_min[index] = min(float(val[0][features[index]]), feat_max[index])
+			print("Max Values: ", feat_max)
+			print("Minx Values: ", feat_min)
+			
+			for i in self.datasets:
+				for key, val in i.items():
+					# print(key, val[0]['hum'])
+					feats = {}
+					for fkey, fval in val[0].items():
+						feats[fkey] = (float(fval) + abs(feat_min[fkey]))/(feat_max[fkey] + abs(feat_min[fkey]))
+												
+					i[key] =  (feats , val[1])
+
+			# print(self.datasets[0])
 
 		def get_class(im_id):
 			for clss, img_ids in self.class_imgs.items():
@@ -82,8 +120,7 @@ class metadata_map():
 					self.class_imgs[clss] += img_ids
 				
 
-			# features = ["hum", "tempm", "dewptm", "vism", "pressurem", "windchillm", "wgustm"]
-			features = ["hum", "tempm", "dewptm", "pressurem"]
+
 
 			### Load Metadata
 			metadata = 0
@@ -97,21 +134,29 @@ class metadata_map():
 				if clss is None:
 					continue
 
-				feat_list = []
+				feat_list = {}
 				for key, val in data['weather'].items():
 					if key in features:
-						if val == '' or val == 'N/A':
+						if val == '' or val == 'N/A' or float(val) <= -999.0:
 							val = -9999 
-						feat_list.append({key : val}) #put all relevant features in list
+							feat_list = {}
+							break
+						# feat_list.append({key : val}) #put all relevant features in list
+						feat_list[key] = val
 				# if(data['id'] == "3414285633"):
 				# 	print(feat_list)
-				n_metadata[data['id']] = (feat_list, clss) # <id : weatherfeat[]> mapping
+				if len(feat_list) > 0:
+					n_metadata[data['id']] = (feat_list, clss) # <id : (weatherfeat:{'hum':0, ...}, class)> mapping
 				# print(self.n_metadata)
 			
 			print("Number of Image Ids: ", num_img_ids)
 			print("Number of Image Ids with metadata: ", len(n_metadata))
 			self.datasets.append(n_metadata)
 		# print(len(self.datasets))
+		
+		normalize_data()
+
+
 
 
 
