@@ -1,0 +1,10 @@
+<bound method Module.parameters of vgg16_CNN(
+  (encoder): Sequential(
+    (0): Conv2d(512, 400, kernel_size=(2, 2), stride=(1, 1))
+    (1): ReLU()
+    (2): Flatten()
+    (3): Linear(in_features=14400, out_features=64, bias=True)
+    (4): ReLU()
+    (5): Linear(in_features=64, out_features=5, bias=True)
+  )
+)>
